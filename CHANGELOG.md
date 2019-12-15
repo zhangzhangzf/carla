@@ -1,3 +1,7 @@
+## Latest
+
+  * Upgraded Boost to 1.72.0
+
 ## CARLA 0.9.7
 
   * Add build variant with AD RSS library integration with RSS sensor and result visualisation
