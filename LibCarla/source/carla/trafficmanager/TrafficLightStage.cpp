@@ -76,7 +76,7 @@ namespace traffic_manager {
           ego_vehicle->IsAtTrafficLight() &&
           traffic_light_state != TLS::Green) {
 
-        traffic_light_hazard = true;
+        traffic_light_hazard = false;
       }
       // Handle entry negotiation at non-signalised junction.
       else if (!closest_waypoint->CheckJunction() &&
