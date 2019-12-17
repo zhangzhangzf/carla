@@ -15,6 +15,8 @@ import argparse
 import logging
 import sys
 import os
+import math
+
 try:
     sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
         sys.version_info.major,
@@ -181,6 +183,10 @@ def main():
 
         while True:
             time.sleep(1)
+            #spec_location = carla.Location(0, 0, 50)
+            #spec_rotation = carla.Rotation(math.radians(90), 0, 0)
+            #new_transform = carla.Transform(spec_location, spec_rotation)
+            #world.get_spectator().set_transform(new_transform)
 
     finally:
         if traffic_manager:

@@ -203,7 +203,7 @@ namespace CollisionStageConstants {
     planner_messenger_state = planner_messenger->SendData(packet);
   }
 
-  bool CollisionStage::NegotiateCollision(const Actor &reference_vehicle, const Actor &other_vehicle) const {
+  bool CollisionStage::NegotiateCollision(const Actor &reference_vehicle, const Actor &other_vehicle, const ) const {
 
     bool hazard = false;
 
@@ -219,6 +219,11 @@ namespace CollisionStageConstants {
 
     auto actor_type = other_vehicle->GetTypeId();
     if (actor_type[0] == 'v'){
+
+      // WARNING WARNING WARNING: Unregistered vehicle
+      // if (unregistered_actors.find(other_vehicle->GetId()) != unregistered_actors.end()){
+        // do something? or just do bboxes
+      // }
 
       // debug_helper.DrawLine(reference_location,other_location,0.2f,{0u,255u,255u},0.02f);
 
