@@ -20,7 +20,8 @@ namespace CollisionStageConstants {
   static const float CRAWL_SPEED = 10.0f / 3.6f;
   static const float BOUNDARY_EDGE_LENGTH = 2.0f;
   static const float MAX_COLLISION_RADIUS = 100.0f;
-  static const float MIN_COLLISION_RADIUS = 30.0f;
+  static const float MIN_COLLISION_RADIUS = 15.0f;
+  static const float MIN_DISTANCE_VEHICLE_PEDESTRIAN = 1.5f;
 
 } // namespace CollisionStageConstants
 
@@ -83,7 +84,7 @@ namespace CollisionStageConstants {
         const auto unregistered_id = walker->GetId();
         if (unregistered_actors.find(unregistered_id) == unregistered_actors.end()) {
           unregistered_actors.insert({unregistered_id, walker});
-        }        
+        }
       }
       // Regularly update unregistered actors.
       std::vector<ActorId> actor_ids_to_erase;
@@ -203,7 +204,7 @@ namespace CollisionStageConstants {
     planner_messenger_state = planner_messenger->SendData(packet);
   }
 
-  bool CollisionStage::NegotiateCollision(const Actor &reference_vehicle, const Actor &other_vehicle, const ) const {
+  bool CollisionStage::NegotiateCollision(const Actor &reference_vehicle, const Actor &other_vehicle) const {
 
     bool hazard = false;
 
@@ -219,13 +220,6 @@ namespace CollisionStageConstants {
 
     auto actor_type = other_vehicle->GetTypeId();
     if (actor_type[0] == 'v'){
-
-      // WARNING WARNING WARNING: Unregistered vehicle
-      // if (unregistered_actors.find(other_vehicle->GetId()) != unregistered_actors.end()){
-        // do something? or just do bboxes
-      // }
-
-      // debug_helper.DrawLine(reference_location,other_location,0.2f,{0u,255u,255u},0.02f);
 
       const cg::Vector3D other_heading = other_vehicle->GetTransform().GetForwardVector();
       cg::Vector3D other_to_reference = reference_vehicle->GetLocation() - other_vehicle->GetLocation();
@@ -251,26 +245,27 @@ namespace CollisionStageConstants {
             cg::Math::Dot(reference_heading, reference_to_other) > cg::Math::Dot(other_heading, other_to_reference)
           )) ) {
         
-        // debug_helper.DrawString(reference_location,"Stopping, vehicle",false,{0u,255u,255u},0.03f);
         hazard = true;
       }
+      
     } else if (actor_type[0] == 'w') {
       
-      //debug_helper.DrawLine(reference_location,other_location,0.2f,{255u,0u,255u},0.02f);
-
       SimpleWaypointPtr closest_waypoint = local_map.GetWaypoint(other_location);
       
       if (closest_waypoint != nullptr){
 
-        //debug_helper.DrawLine(closest_waypoint->GetLocation(),other_location,0.2f,{255u,0u,0u},0.02f);
-        float walker_distance = closest_waypoint->Distance(other_location);
+        // dot product, more restrictive (ergo less value) as the velocity increases (between 30 and 45 degrees, maxed at 30Km/h)
+        float cos_40 = 0.766f; // 40 degree
+        float cos_60 = 0.5f; // 60 degrees
+        float min_dot_product = cos_40 + reference_vehicle->GetVelocity().Length()*3.6f*(cos_60-cos_40)/30;
+        min_dot_product = cg::Math::Clamp(min_dot_product,cos_60,cos_40);
 
-        float min_walker_distance = 2.3f*reference_vehicle_ptr->GetBoundingBox().extent.y;
+        float walker_distance = closest_waypoint->Distance(other_location);
+        float min_walker_distance = MIN_DISTANCE_VEHICLE_PEDESTRIAN + reference_vehicle_ptr->GetBoundingBox().extent.y;
+
         float bbox_extension = GetBoundingBoxExtention(reference_vehicle);
 
-        //debug_helper.DrawString(reference_location,std::to_string(bbox_extension),false,{255u,0u,0u},0.03f);
-        
-        if (cg::Math::Dot(reference_heading,reference_to_other) > 0.0f &&
+        if (cg::Math::Dot(reference_heading,reference_to_other) > min_dot_product &&
             walker_distance < min_walker_distance &&
             closest_waypoint->Distance(reference_location) < bbox_extension){
 
