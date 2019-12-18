@@ -57,9 +57,6 @@ namespace traffic_manager {
 
   private:
 
-    /// Variables to remember messenger states.
-    int localization_messenger_state;
-    int planner_messenger_state;
     /// Selection key for switching between output frames.
     bool frame_selector;
     /// Pointer to data received from localization stage.

@@ -31,6 +31,7 @@
 #include "carla/trafficmanager/Parameters.h"
 #include "carla/trafficmanager/PipelineStage.h"
 #include "carla/trafficmanager/SimpleWaypoint.h"
+#include "carla/trafficmanager/PerformanceDiagnostics.h"
 
 namespace carla {
 namespace traffic_manager {
@@ -49,14 +50,9 @@ namespace traffic_manager {
 
   private:
 
-    /// Variables to remember messenger states.
-    int planner_messenger_state;
-    int collision_messenger_state;
-    int traffic_light_messenger_state;
     /// Section keys to switch between the output data frames.
     bool planner_frame_selector;
     bool collision_frame_selector;
-    bool collision_frame_ready;
     bool traffic_light_frame_selector;
     /// Output data frames to be shared with the motion planner stage.
     std::shared_ptr<LocalizationToPlannerFrame> planner_frame_a;
@@ -110,6 +106,8 @@ namespace traffic_manager {
     std::unordered_map<ActorId, Actor> unregistered_actors;
     /// Structure to keep track of the closest waypoint for unregistered actors.
     std::unordered_map<ActorId, SimpleWaypointPtr> unregistered_waypoints;
+    /// Code snippet execution time profiler.
+    SnippetProfiler snippet_profiler;
 
     /// A simple method used to draw waypoint buffer ahead of a vehicle.
     void DrawBuffer(Buffer &buffer);
