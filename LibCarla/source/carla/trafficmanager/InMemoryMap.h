@@ -18,6 +18,7 @@
 #include "carla/geom/Math.h"
 #include "carla/Memory.h"
 #include "carla/road/Lane.h"
+#include "carla/road/RoadTypes.h"
 
 #include "carla/trafficmanager/SimpleWaypoint.h"
 
@@ -32,6 +33,7 @@ namespace traffic_manager {
   using TopologyList = std::vector<std::pair<WaypointPtr, WaypointPtr>>;
   using SimpleWaypointPtr = std::shared_ptr<SimpleWaypoint>;
   using NodeList = std::vector<SimpleWaypointPtr>;
+  using GeoGridId = crd::JuncId;
 
   /// This class builds a discretized local map-cache.
   /// Instantiate the class with map topology from the simulator
@@ -47,6 +49,8 @@ namespace traffic_manager {
     NodeList dense_topology;
     /// Grid localization map for all waypoints in the system.
     std::unordered_map<std::string, std::unordered_set<SimpleWaypointPtr>> waypoint_grid;
+    /// Geodesic grid topology.
+    std::unordered_map<GeoGridId, cg::Location> geodesic_grid_center;
 
     /// Method to generate the grid ids for given co-ordinates.
     std::pair<int, int> MakeGridId(float x, float y);
@@ -75,6 +79,9 @@ namespace traffic_manager {
     /// This method returns the full list of discrete samples of the map in the
     /// local cache.
     NodeList GetDenseTopology() const;
+
+    void MakeGeodesiGridCenters();
+    cg::Location GetGeodesicGridCenter(GeoGridId ggid);
 
   };
 

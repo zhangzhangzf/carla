@@ -53,37 +53,105 @@ namespace traffic_manager {
 
   TrackTraffic::TrackTraffic() {}
 
-  void TrackTraffic::UpdateOverlappingVehicle(ActorId actor_id, ActorId other_id) {
+  void TrackTraffic::UpdateGridPosition(ActorId actor_id, SimpleWaypointPtr waypoint) {
 
-    if (overlapping_vehicles.find(actor_id) != overlapping_vehicles.end()) {
-      ActorIdSet& actor_set = overlapping_vehicles.at(actor_id);
-      if (actor_set.find(other_id) == actor_set.end()) {
-        actor_set.insert(other_id);
+    GeoGridId new_geo_grid_id = waypoint->GetGeodesicGridId();
+
+    if (actor_to_grids.find(actor_id) != actor_to_grids.end()) {
+      auto& grid_ids = actor_to_grids.at(actor_id);
+      if (grid_ids.find(new_geo_grid_id) == grid_ids.end()) {
+        grid_ids.insert(new_geo_grid_id);
       }
     } else {
-      overlapping_vehicles.insert({actor_id, {other_id}});
+      actor_to_grids.insert({actor_id, {new_geo_grid_id}});
+    }
+
+    if (grid_to_actors.find(new_geo_grid_id) != grid_to_actors.end()) {
+      ActorIdSet& actor_set = grid_to_actors.at(new_geo_grid_id);
+      if (actor_set.find(actor_id) == actor_set.end()) {
+        actor_set.insert(actor_id);
+      }
+    } else {
+      grid_to_actors.insert({new_geo_grid_id, {actor_id}});
     }
   }
 
-  void TrackTraffic::RemoveOverlappingVehicle(ActorId actor_id, ActorId other_id) {
+  void TrackTraffic::RemoveGridPosition(ActorId actor_id, SimpleWaypointPtr removed_waypoint,
+                                        SimpleWaypointPtr remaining_waypoint) {
 
-    if (overlapping_vehicles.find(actor_id) != overlapping_vehicles.end()) {
-      ActorIdSet& actor_set = overlapping_vehicles.at(actor_id);
-      if (actor_set.find(actor_id) != actor_set.end()) {
-        actor_set.erase(other_id);
+    if (removed_waypoint != nullptr) {
+
+      GeoGridId removed_grid_id = removed_waypoint->GetGeodesicGridId();
+      GeoGridId remaining_grid_id;
+      if (remaining_waypoint != nullptr) {
+        remaining_grid_id = remaining_waypoint->GetGeodesicGridId();
+      }
+
+      if (remaining_waypoint == nullptr || removed_grid_id != remaining_grid_id) {
+        if (actor_to_grids.find(actor_id) != actor_to_grids.end()) {
+          auto& grid_ids = actor_to_grids.at(actor_id);
+          if (grid_ids.find(removed_grid_id) != grid_ids.end()) {
+            grid_ids.erase(removed_grid_id);
+          }
+        }
+
+        if (grid_to_actors.find(removed_grid_id) != grid_to_actors.end()) {
+          ActorIdSet& actor_set = grid_to_actors.at(removed_grid_id);
+          if (actor_set.find(actor_id) != actor_set.end()) {
+            actor_set.erase(actor_id);
+          }
+        }
       }
     }
   }
 
   ActorIdSet TrackTraffic::GetOverlappingVehicles(ActorId actor_id) {
 
-    if (overlapping_vehicles.find(actor_id) != overlapping_vehicles.end()) {
-      return overlapping_vehicles.at(actor_id);
-    } else {
-      return ActorIdSet();
+    ActorIdSet actor_id_set;
+
+    if (actor_to_grids.find(actor_id) != actor_to_grids.end()) {
+      std::unordered_set<GeoGridId>& grid_ids = actor_to_grids.at(actor_id);
+      for (auto& grid_id: grid_ids) {
+        if (grid_to_actors.find(grid_id) != grid_to_actors.end()) {
+          ActorIdSet& actor_ids = grid_to_actors.at(grid_id);
+          actor_id_set.insert(actor_ids.begin(), actor_ids.end());
+        }
+      }
+    }
+
+    return actor_id_set;
+  }
+
+  void TrackTraffic::DeleteActor(ActorId actor_id) {
+
+    if (actor_to_grids.find(actor_id) != actor_to_grids.end()) {
+      std::unordered_set<GeoGridId>& grid_ids = actor_to_grids.at(actor_id);
+      for (auto& grid_id: grid_ids) {
+        if (grid_to_actors.find(grid_id) != grid_to_actors.end()) {
+          ActorIdSet& actor_ids = grid_to_actors.at(grid_id);
+          if (actor_ids.find(actor_id) != actor_ids.end()) {
+            actor_ids.erase(actor_id);
+          }
+        }
+      }
+      actor_to_grids.erase(actor_id);
     }
   }
 
+  std::unordered_set<GeoGridId> TrackTraffic::GetGridIds(ActorId actor_id) {
+
+    std::unordered_set<GeoGridId> grid_ids;
+
+    if (actor_to_grids.find(actor_id) != actor_to_grids.end()) {
+      grid_ids = actor_to_grids.at(actor_id);
+    }
+
+    return grid_ids;
+  }
+
+  std::unordered_map<GeoGridId, ActorIdSet>& TrackTraffic::GetGridActors() {
+    return grid_to_actors;
+  }
 
   void TrackTraffic::UpdatePassingVehicle(uint64_t waypoint_id, ActorId actor_id) {
 
@@ -97,7 +165,6 @@ namespace traffic_manager {
 
       waypoint_overlap_tracker.insert({waypoint_id, {actor_id}});
     }
-
   }
 
   void TrackTraffic::RemovePassingVehicle(uint64_t waypoint_id, ActorId actor_id) {
@@ -122,6 +189,7 @@ namespace traffic_manager {
     } else {
       return ActorIdSet();
     }
+
   }
 
 } // namespace traffic_manager

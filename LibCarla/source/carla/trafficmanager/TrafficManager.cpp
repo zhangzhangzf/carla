@@ -34,6 +34,15 @@ namespace traffic_manager {
     local_map = std::make_shared<traffic_manager::InMemoryMap>(topology);
     local_map->SetUp(0.1f);
 
+    // ---------- configuring simulation to fixed time step synchronous execution ------------- //
+
+    auto world_settings = world.GetSettings();
+    world_settings.fixed_delta_seconds = 0.05f;
+    world_settings.synchronous_mode = true;
+    world.ApplySettings(world_settings);
+
+    // ---------------------------------------------------------------------------------------- //
+
     parameters.SetGlobalPercentageSpeedDifference(perc_difference_from_limit);
 
     localization_collision_messenger = std::make_shared<LocalizationToCollisionMessenger>();
@@ -48,12 +57,13 @@ namespace traffic_manager {
         localization_planner_messenger, localization_collision_messenger,
         localization_traffic_light_messenger,
         registered_actors, *local_map.get(),
-        parameters, debug_helper);
+        parameters, debug_helper,
+        world);
 
     collision_stage = std::make_unique<CollisionStage>(
         "Collision stage",
         localization_collision_messenger, collision_planner_messenger,
-        world, *local_map.get(), parameters, debug_helper);
+        *local_map.get(), parameters, debug_helper);
 
     traffic_light_stage = std::make_unique<TrafficLightStage>(
         "Traffic light stage",
@@ -81,6 +91,14 @@ namespace traffic_manager {
   }
 
   TrafficManager::~TrafficManager() {
+    // -------- configuring simulation to variable time step, asynchronous execution ---------- //
+
+    auto world_settings = world.GetSettings();
+    world_settings.fixed_delta_seconds = 0.0f;
+    world_settings.synchronous_mode = false;
+    world.ApplySettings(world_settings);
+
+    // ---------------------------------------------------------------------------------------- //
     Stop();
   }
 
@@ -92,8 +110,8 @@ namespace traffic_manager {
 
       const std::vector<float> longitudinal_param = {2.0f, 0.15f, 0.01f};
       const std::vector<float> longitudinal_highway_param = {4.0f, 0.15f, 0.01f};
-      const std::vector<float> lateral_param = {10.0f, 0.0f, 0.1f};
-      const std::vector<float> lateral_highway_param = {6.0f, 0.0f, 0.3f};
+      const std::vector<float> lateral_param = {4.0f, 0.0f, 0.2f};
+      const std::vector<float> lateral_highway_param = {1.0f, 0.0f, 0.3f};
       const float perc_difference_from_limit = 30.0f;
 
       TrafficManager* tm_ptr = new TrafficManager(

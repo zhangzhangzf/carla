@@ -10,7 +10,8 @@ namespace carla {
 namespace traffic_manager {
 
   PipelineStage::PipelineStage(std::string stage_name)
-    : performance_diagnostics(PerformanceDiagnostics(stage_name)) {
+    : stage_name(stage_name),
+      performance_diagnostics(PerformanceDiagnostics(stage_name)) {
 
     run_stage.store(true);
     run_receiver.store(true);
@@ -61,7 +62,6 @@ namespace traffic_manager {
   void PipelineStage::ActionThreadManager() {
 
     while (run_stage.load()) {
-      performance_diagnostics.RegisterUpdate();
 
       std::unique_lock<std::mutex> lock(thread_coordination_mutex);
 
@@ -74,7 +74,14 @@ namespace traffic_manager {
 
       // Run action.
       if (run_stage.load()) {
-        Action();
+        try {
+          performance_diagnostics.RegisterUpdate(true);
+          Action();
+          performance_diagnostics.RegisterUpdate(false);
+        } catch(const std::exception& e) {
+          carla::log_error("Encountered exception while running action of stage : "
+                           + stage_name + e.what() + '\n');
+        }
       }
 
       // Notify sender.
