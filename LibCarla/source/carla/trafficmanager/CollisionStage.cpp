@@ -153,37 +153,36 @@ namespace CollisionStageConstants {
     planner_messenger_state = planner_messenger->SendData(packet);
   }
 
-  bool CollisionStage::NegotiateCollision(const Actor &reference_vehicle, const Actor &other_vehicle) {
+  bool CollisionStage::NegotiateCollision(const Actor &reference_vehicle, const Actor &other_actor) {
 
     bool hazard = false;
 
-
     const cg::Location reference_location = reference_vehicle->GetLocation();
-    const cg::Location other_location = other_vehicle->GetLocation();
+    const cg::Location other_location = other_actor->GetLocation();
 
     const auto reference_vehicle_ptr = boost::static_pointer_cast<cc::Vehicle>(reference_vehicle);
-    const auto other_vehicle_ptr = boost::static_pointer_cast<cc::Vehicle>(other_vehicle);
+    const auto other_actor_ptr = boost::static_pointer_cast<cc::Vehicle>(other_actor);
 
     const cg::Vector3D reference_heading = reference_vehicle->GetTransform().GetForwardVector();
     cg::Vector3D reference_to_other = other_location - reference_location;
     reference_to_other = reference_to_other.MakeUnitVector();
 
-    auto actor_type = other_vehicle->GetTypeId();
+    auto actor_type = other_actor->GetTypeId();
     if (actor_type[0] == 'v'){
 
       debug_helper.DrawLine(reference_location,other_location,0.2f,{0u,255u,255u},0.02f);
 
-      const cg::Vector3D other_heading = other_vehicle->GetTransform().GetForwardVector();
-      cg::Vector3D other_to_reference = reference_vehicle->GetLocation() - other_vehicle->GetLocation();
+      const cg::Vector3D other_heading = other_actor->GetTransform().GetForwardVector();
+      cg::Vector3D other_to_reference = reference_vehicle->GetLocation() - other_actor->GetLocation();
       other_to_reference = other_to_reference.MakeUnitVector();
 
       const Polygon reference_geodesic_polygon = GetPolygon(GetGeodesicBoundary(reference_vehicle));
-      const Polygon other_geodesic_polygon = GetPolygon(GetGeodesicBoundary(other_vehicle));
+      const Polygon other_geodesic_polygon = GetPolygon(GetGeodesicBoundary(other_actor));
       const Polygon reference_polygon = GetPolygon(GetBoundary(reference_vehicle));
-      const Polygon other_polygon = GetPolygon(GetBoundary(other_vehicle));
+      const Polygon other_polygon = GetPolygon(GetBoundary(other_actor));
 
       const double reference_vehicle_to_other_geodesic = bg::distance(reference_polygon, other_geodesic_polygon);
-      const double other_vehicle_to_reference_geodesic = bg::distance(other_polygon, reference_geodesic_polygon);
+      const double other_actor_to_reference_geodesic = bg::distance(other_polygon, reference_geodesic_polygon);
       
       const auto inter_geodesic_distance = bg::distance(reference_geodesic_polygon, other_geodesic_polygon);
       const auto inter_bbox_distance = bg::distance(reference_polygon, other_polygon);
@@ -191,7 +190,7 @@ namespace CollisionStageConstants {
       if (inter_geodesic_distance < 0.1 &&
           ((
             inter_bbox_distance > 0.1 &&
-            reference_vehicle_to_other_geodesic > other_vehicle_to_reference_geodesic
+            reference_vehicle_to_other_geodesic > other_actor_to_reference_geodesic
           ) || (
             inter_bbox_distance < 0.1 &&
             cg::Math::Dot(reference_heading, reference_to_other) > cg::Math::Dot(other_heading, other_to_reference)
@@ -204,6 +203,7 @@ namespace CollisionStageConstants {
 
       debug_helper.DrawLine(reference_location,other_location,0.2f,{255u,0u,255u},0.02f);
       
+      //SimpleWaypointPtr closest_waypoint = unregistered_waypoints(other_actor->GetId());
       SimpleWaypointPtr closest_waypoint = local_map.GetWaypoint(other_location);
       
       if (closest_waypoint != nullptr){
@@ -227,32 +227,8 @@ namespace CollisionStageConstants {
             hazard = true;
         }
       }
-    } else {
-      std::cout << "Actors not v or w?\n";
     }
     return hazard;
-    
-      /*} else {
-
-          //debug_helper.DrawLine(reference_location,other_location,0.2f,{0u,255u,255u},0.02f);
-
-          float reference_vehicle_length = reference_vehicle_ptr->GetBoundingBox().extent.x;
-          float other_vehicle_length = other_vehicle_ptr->GetBoundingBox().extent.x;
-          float vehicle_length_sum = reference_vehicle_length + other_vehicle_length;
-          float bbox_extension_length = GetBoundingBoxExtention(reference_vehicle);
-
-          // 2) Hazard if close enough
-
-          if (cg::Math::Dot(reference_heading, reference_to_other) > 0 &&
-              cg::Math::Dot(reference_heading, other_heading) > 0 &&
-              cg::Math::DistanceSquared(reference_location, other_location) <
-              std::pow(bbox_extension_length + vehicle_length_sum, 2)) {
-
-            debug_helper.DrawString(reference_location,"Stopping, vehicle",false,{0u,255u,255u},0.03f);
-            
-            hazard = true;
-          }
-        }*/
   }
 
   traffic_manager::Polygon CollisionStage::GetPolygon(const LocationList &boundary) {
