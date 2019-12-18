@@ -31,13 +31,11 @@ namespace CollisionStageConstants {
       std::string stage_name,
       std::shared_ptr<LocalizationToCollisionMessenger> localization_messenger,
       std::shared_ptr<CollisionToPlannerMessenger> planner_messenger,
-      InMemoryMap &local_map,
       Parameters &parameters,
       cc::DebugHelper &debug_helper)
     : PipelineStage(stage_name),
       localization_messenger(localization_messenger),
       planner_messenger(planner_messenger),
-      local_map(local_map),
       parameters(parameters),
       debug_helper(debug_helper){
 
@@ -160,7 +158,7 @@ namespace CollisionStageConstants {
     auto actor_type = other_actor->GetTypeId();
     if (actor_type[0] == 'v'){
 
-      debug_helper.DrawLine(reference_location,other_location,0.2f,{0u,255u,255u},0.02f);
+      debug_helper.DrawLine(reference_location,other_location,0.2f,{0u,255u,255u},0.05f);
 
       const cg::Vector3D other_heading = other_actor->GetTransform().GetForwardVector();
       cg::Vector3D other_to_reference = reference_vehicle->GetLocation() - other_actor->GetLocation();
@@ -191,18 +189,25 @@ namespace CollisionStageConstants {
       
     } else if (actor_type[0] == 'w') {
 
-      debug_helper.DrawLine(reference_location,other_location,0.2f,{255u,0u,255u},0.02f);
+      debug_helper.DrawLine(reference_location,other_location,0.2f,{255u,0u,255u},0.05f);
       
-      //SimpleWaypointPtr closest_waypoint = unregistered_waypoints(other_actor->GetId());
-      SimpleWaypointPtr closest_waypoint = local_map.GetWaypoint(other_location);
+      const auto &unregistered_waypoints =  localization_frame->at(vehicle_id_to_index.at(reference_vehicle->GetId())).unregistered_waypoints;
+
+      SimpleWaypointPtr closest_waypoint = unregistered_waypoints.at(other_actor->GetId());
+      //SimpleWaypointPtr closest_waypoint = local_map.GetWaypoint(other_location);
       
       if (closest_waypoint != nullptr){
 
-        // dot product, more restrictive (ergo less value) as the velocity increases (between 30 and 45 degrees, maxed at 30Km/h)
-        float cos_40 = 0.766f; // 40 degree
-        float cos_60 = 0.5f; // 60 degrees
-        float min_dot_product = cos_40 + reference_vehicle->GetVelocity().Length()*3.6f*(cos_60-cos_40)/30;
-        min_dot_product = cg::Math::Clamp(min_dot_product,cos_60,cos_40);
+        debug_helper.DrawLine(closest_waypoint->GetLocation(),other_location,0.2f,{255u,0u,0u},0.05f);
+
+        // Test for general intersection stopping (The higher, the more wasted time waiting for walkers to move)
+        float cos_40 = 0.766f; 
+        // Test for small radius turns
+        float cos_70 = 0.342f;
+
+        // dot product, the check area widens as the speed increases
+        float min_dot_product = cos_40 + reference_vehicle->GetVelocity().Length()*3.6f*(cos_70-cos_40)/30;
+        min_dot_product = cg::Math::Clamp(min_dot_product,cos_70,cos_40);
 
         float walker_distance = closest_waypoint->Distance(other_location);
         float min_walker_distance = MIN_DISTANCE_VEHICLE_PEDESTRIAN + reference_vehicle_ptr->GetBoundingBox().extent.y;
@@ -216,7 +221,11 @@ namespace CollisionStageConstants {
             debug_helper.DrawString(reference_location,"Stopping, pedestrian",false,{255u,0u,255u},0.03f);
             hazard = true;
         }
+      } else{
+        debug_helper.DrawString(reference_location,"nullptr",false,{255u,0u,0u},0.03f);
+            
       }
+
     }
     return hazard;
   }

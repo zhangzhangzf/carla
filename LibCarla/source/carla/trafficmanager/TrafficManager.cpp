@@ -54,7 +54,7 @@ namespace traffic_manager {
     collision_stage = std::make_unique<CollisionStage>(
         "Collision stage",
         localization_collision_messenger, collision_planner_messenger,
-        *local_map.get(), parameters, debug_helper);
+        parameters, debug_helper);
 
     traffic_light_stage = std::make_unique<TrafficLightStage>(
         "Traffic light stage",

@@ -221,6 +221,7 @@ namespace LocalizationConstants {
         }
         collision_message.overlapping_actors.insert({overlapping_actor_id, actor_ptr});
       }
+      collision_message.unregistered_waypoints = unregistered_waypoints;
 
       LocalizationToTrafficLightData &traffic_light_message = current_traffic_light_frame->at(i);
       traffic_light_message.actor = vehicle;

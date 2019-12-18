@@ -54,6 +54,7 @@ namespace traffic_manager {
     Actor actor;
     Buffer buffer;
     std::unordered_map<ActorId, Actor> overlapping_actors;
+    std::unordered_map<ActorId, std::shared_ptr<SimpleWaypoint>> unregistered_waypoints;
   };
 
   /// Type of data sent by the collision stage to the motion planner stage.

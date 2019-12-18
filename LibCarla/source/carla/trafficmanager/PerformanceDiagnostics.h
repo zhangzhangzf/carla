@@ -77,9 +77,9 @@ namespace traffic_manager {
 
       chr::duration<float> print_duration = current_time - print_clock;
       if (print_duration.count() > 1.0f) {
-        std::cout << "Snippet name : " << snippet_name << ", "
-                  << "avg. duration : " << 1000 * snippet_duration.count()
-                  << " ms" << std::endl;
+        //std::cout << "Snippet name : " << snippet_name << ", "
+        //          << "avg. duration : " << 1000 * snippet_duration.count()
+        //          << " ms" << std::endl;
         print_clock = current_time;
       }
     }

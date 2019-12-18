@@ -33,7 +33,6 @@
 #include "carla/trafficmanager/Parameters.h"
 #include "carla/trafficmanager/PerformanceDiagnostics.h"
 #include "carla/trafficmanager/PipelineStage.h"
-#include "carla/trafficmanager/InMemoryMap.h"
 
 namespace carla {
 namespace traffic_manager {
@@ -67,8 +66,6 @@ namespace traffic_manager {
     /// Pointers to messenger objects.
     std::shared_ptr<LocalizationToCollisionMessenger> localization_messenger;
     std::shared_ptr<CollisionToPlannerMessenger> planner_messenger;
-    /// Reference to local map-cache object.
-    InMemoryMap &local_map;
     /// Runtime parameterization object.
     Parameters &parameters;
     /// Reference to Carla's debug helper object.
@@ -109,7 +106,6 @@ namespace traffic_manager {
         std::string stage_name,
         std::shared_ptr<LocalizationToCollisionMessenger> localization_messenger,
         std::shared_ptr<CollisionToPlannerMessenger> planner_messenger,
-        InMemoryMap &local_map,
         Parameters &parameters,
         cc::DebugHelper &debug_helper);
 
