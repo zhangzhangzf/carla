@@ -23,15 +23,15 @@ using ActorPtr = carla::SharedPtr<carla::client::Actor>;
 /// the traffic manager appropriately using messengers.
 class TrafficManagerBase {
 
-protected:
+public:
 	/// To start the TrafficManager.
 	virtual void Start() = 0;
 
 	/// To stop the TrafficManager.
 	virtual void Stop() = 0;
 
-public:
 
+   
 	/// Protected constructor for singleton lifecycle management.
 	TrafficManagerBase() {};
 

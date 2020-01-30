@@ -66,6 +66,20 @@ public:
 
 	TrafficManager &operator=(const TrafficManager &) = default;
 	TrafficManager &operator=(TrafficManager &&) = default;
+	static void Reset()
+	{
+		if (singleton_pointer)
+		{
+			TrafficManagerBase *fp = singleton_pointer.release();
+			delete fp;
+		}
+	}
+	static void Pause()
+	{
+		if(singleton_pointer) {
+		singleton_pointer->Stop();
+		}
+	}
 
 	/// This method registers a vehicle with the traffic manager.
 	void RegisterVehicles(const std::vector<ActorPtr> &actor_list) {
@@ -149,7 +163,7 @@ public:
 		}
 	}
 };
-
+ 
 } // namespace traffic_manager
 } // namespace carla
 

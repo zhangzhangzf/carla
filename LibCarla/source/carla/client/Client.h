@@ -58,7 +58,11 @@ namespace client {
       return World{_simulator->ReloadEpisode()};
     }
 
-    World LoadWorld(std::string map_name) const {
+    World LoadWorld(std::string map_name) const
+    {
+      traffic_manager::TrafficManager::Pause();
+      std::this_thread::sleep_for(0.5s);
+      traffic_manager::TrafficManager::Reset();
       return World{_simulator->LoadEpisode(std::move(map_name))};
     }
 
@@ -126,4 +130,4 @@ namespace client {
         PythonUtil::ReleaseGILDeleter()) {}
 
 } // namespace client
-} // namespace carla
+} // namespace carla 

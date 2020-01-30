@@ -94,7 +94,7 @@ namespace traffic_manager {
     /// Method to check if traffic lights are frozen.
     bool CheckAllFrozen(TLGroup tl_to_freeze);
 
-  protected:
+  public:
 
     /// To start the TrafficManager.
     void Start();
@@ -102,7 +102,7 @@ namespace traffic_manager {
     /// To stop the TrafficManager.
     void Stop();
 
-  public:
+
 
     /// Private constructor for singleton lifecycle management.
     TrafficManagerLocal
