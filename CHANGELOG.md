@@ -16,8 +16,10 @@
     - `weather.py`: allows weather changes using the new weather parameters
   * Fixed docker build of .BIN for pedestrian navigation
   * Fixed typos
-  * Fixed agent failures due to API changes in `is_within_distance_ahead()`
-  * Fixed incorrect doppler velocity for RADAR sensor
+  * Fixed agent failures due to API changes in is_within_distance_ahead()
+  * Fixed incorrect doppler velocity for RADAR sensors.
+  * Recorder feature:
+    - Added an option (-i) when replaying a session to ignore the hero vehicles
 
 
 ## CARLA 0.9.7
