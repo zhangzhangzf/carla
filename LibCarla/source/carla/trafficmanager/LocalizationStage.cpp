@@ -237,7 +237,6 @@ namespace LocalizationConstants {
         final_point = GetSafeLocationAfterJunction(vehicle_reference, waypoint_buffer);
         if(final_point != nullptr){
           final_safe_points[actor_id] = final_point;
-          approaching_junction = false;
           approached[actor_id] = true;
         }
       }

@@ -87,7 +87,7 @@ namespace traffic_manager {
 
     /// Returns the extrapolated bounding box of the vehicle along its
     /// trajectory.
-    LocationList GetGeodesicBoundary(const Actor &actor);
+    LocationList GetGeodesicBoundary(const Actor &actor, const SimpleWaypointPtr safe_point = nullptr);
 
     /// Method to construct a boost polygon object.
     Polygon GetPolygon(const LocationList &boundary);
@@ -102,7 +102,7 @@ namespace traffic_manager {
     float GetBoundingBoxExtention(const Actor &ego_vehicle);
 
     /// At intersections, used to see if there is space after the junction
-    bool IsLocationAfterJunctionSafe(const Actor &ego_actor, const Actor &overlapped_actor, const SimpleWaypointPtr safe_point);
+    bool IsJunctionSafe(const Actor &ego_actor, const Actor &overlapped_actor, const SimpleWaypointPtr safe_point);
 
     /// A simple method used to draw bounding boxes around vehicles
     void DrawBoundary(const LocationList &boundary);
