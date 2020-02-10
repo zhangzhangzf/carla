@@ -1,55 +1,5 @@
-<h1>Python
-API tutorial</h1>
+<h1>Actors</h1>
 
-In this tutorial we introduce the basic concepts of the CARLA Python API, as
-well as an overview of its most important functionalities. The reference of all
-classes and methods available can be found at
-[Python API reference](python_api.md).
-
-!!! note
-    **This document applies only to the latest development version**. <br>
-    The API has been significantly changed in the latest versions starting at
-    0.9.0. We commonly refer to the new API as **0.9.X API** as opposed to
-    the previous **0.8.X API**.
-
-First of all, we need to introduce a few core concepts:
-
-  - **Actor:** Actor is anything that plays a role in the simulation and can be
-    moved around, examples of actors are vehicles, pedestrians, and sensors.
-  - **Blueprint:** Before spawning an actor you need to specify its attributes,
-    and that's what blueprints are for. We provide a blueprint library with
-    the definitions of all the actors available.
-  - **World:** The world represents the currently loaded map and contains the
-    functions for converting a blueprint into a living actor, among other. It
-    also provides access to the road map and functions to change the weather
-    conditions.
-
-#### Connecting and retrieving the world
-
-To connect to a simulator we need to create a "Client" object, to do so we need
-to provide the IP address and port of a running instance of the simulator
-
-```py
-client = carla.Client('localhost', 2000)
-```
-
-The first recommended thing to do right after creating a client instance is
-setting its time-out. This time-out sets a time limit to all networking
-operations, if the time-out is not set networking operations may block forever
-
-```py
-client.set_timeout(10.0) # seconds
-```
-
-Once we have the client configured we can directly retrieve the world
-
-```py
-world = client.get_world()
-```
-
-Typically we won't need the client object anymore, all the objects created by
-the world will connect to the IP and port provided if they need to. These
-operations are usually done in the background and are transparent to the user.
 
 #### Blueprints
 
@@ -170,6 +120,25 @@ finishes, if we want to get rid of them we need to explicitly destroy them.
     requests, but only has a limited amount of time each update to parse them.
     If we flood the simulator by calling "set" methods too often, e.g.
     set_transform, the requests will accumulate a significant lag.
+
+
+#### Sensors
+
+Sensors are actors that produce a stream of data. Sensors are such a key
+component of CARLA that they deserve their own documentation page, so here we'll
+limit ourselves to show a small example of how sensors work
+
+```py
+camera_bp = blueprint_library.find('sensor.camera.rgb')
+camera = world.spawn_actor(camera_bp, relative_transform, attach_to=my_vehicle)
+camera.listen(lambda image: image.save_to_disk('output/%06d.png' % image.frame))
+```
+
+In this example we have attached a camera to a vehicle, and told the camera to
+save to disk each of the images that are going to be generated.
+
+The full list of sensors and their measurement is explained in
+[Cameras and sensors](cameras_and_sensors.md).
 
 #### Vehicles
 
@@ -297,252 +266,7 @@ print(box.location)         # Location relative to the vehicle.
 print(box.extent)           # XYZ half-box extents in meters.
 ```
 
-#### Sensors
-
-Sensors are actors that produce a stream of data. Sensors are such a key
-component of CARLA that they deserve their own documentation page, so here we'll
-limit ourselves to show a small example of how sensors work
-
-```py
-camera_bp = blueprint_library.find('sensor.camera.rgb')
-camera = world.spawn_actor(camera_bp, relative_transform, attach_to=my_vehicle)
-camera.listen(lambda image: image.save_to_disk('output/%06d.png' % image.frame))
-```
-
-In this example we have attached a camera to a vehicle, and told the camera to
-save to disk each of the images that are going to be generated.
-
-The full list of sensors and their measurement is explained in
-[Cameras and sensors](cameras_and_sensors.md).
-
-#### Other actors
-
-Apart from vehicles and sensors, there are a few other actors in the world. The
-full list can be requested to the world with
-
-```py
-actor_list = world.get_actors()
-```
-
-The actor list object returned has functions for finding, filtering, and
-iterating actors
-
-```py
-# Find an actor by id.
-actor = actor_list.find(id)
-# Print the location of all the speed limit signs in the world.
-for speed_sign in actor_list.filter('traffic.speed_limit.*'):
-    print(speed_sign.get_location())
-```
-
-Among the actors you can find in this list are
-
-  * **Traffic lights** with a [`state`](python_api.md#carla.TrafficLight.state) property
-  to check the light's current state.
-  * **Speed limit signs** with the speed codified in their type_id.
-  * The **Spectator** actor that can be used to move the view of the simulator window.
-
-#### Changing the weather
-
-The lighting and weather conditions can be requested and changed with the world
-object
-
-```py
-weather = carla.WeatherParameters(
-    cloudiness=80.0,
-    precipitation=30.0,
-    sun_altitude_angle=70.0)
-
-world.set_weather(weather)
-
-print(world.get_weather())
-```
-
-For convenience, we also provided a list of predefined weather presets that can
-be directly applied to the world
-
-```py
-world.set_weather(carla.WeatherParameters.WetCloudySunset)
-```
-
-The full list of presets can be found in the
-[WeatherParameters reference](python_api.md#carla.WeatherParameters).
-
-### World Snapshot
-
-A world snapshot represents the state of every actor in the simulation at a single frame,
-a sort of still image of the world with a timestamp. With this feature it is possible to
-record the location of every actor and make sure all of them were captured at the same
-frame without the need of using synchronous mode.
-
-```py
-# Retrieve a snapshot of the world at this point in time.
-world_snapshot = world.get_snapshot()
-
-# Wait for the next tick and retrieve the snapshot of the tick.
-world_snapshot = world.wait_for_tick()
-
-# Register a callback to get called every time we receive a new snapshot.
-world.on_tick(lambda world_snapshot: do_something(world_snapshot))
-```
-
-The world snapshot contains a timestamp and a list of actor snapshots. Actor snapshots do not
-allow to operate on the actor directly as they only contain data about the physical state of
-the actor, but you can use their id to retrieve the actual actor. And the other way around,
-you can look up snapshots by id (average O(1) complexity).
-
-```py
-timestamp = world_snapshot.timestamp
-timestamp.frame_count
-timestamp.elapsed_seconds
-timestamp.delta_seconds
-timestamp.platform_timestamp
-
-
-for actor_snapshot in world_snapshot:
-    actor_snapshot.get_transform()
-    actor_snapshot.get_velocity()
-    actor_snapshot.get_angular_velocity()
-    actor_snapshot.get_acceleration()
-
-    actual_actor = world.get_actor(actor_snapshot.id)
-
-
-actor_snapshot = world_snapshot.find(actual_actor.id)
-```
-
-#### Map and waypoints
-
-One of the key features of CARLA is that our roads are fully annotated. All our
-maps come accompanied by [OpenDrive](http://www.opendrive.org/) files that
-defines the road layout. Furthermore, we provide a higher level API for querying
-and navigating this information.
-
-These objects were a recent addition to our API and are still in heavy
-development, we hope to make them much more powerful soon.
-
-Let's start by getting the map of the current world
-
-```py
-map = world.get_map()
-```
-
-For starters, the map has a [`name`](python_api.md#carla.Map.name) attribute that matches
-the name of the currently loaded city, e.g. Town01. And, as we've seen before, we can also ask
-the map to provide a list of recommended locations for spawning vehicles,
-[`map.get_spawn_points()`](python_api.md#carla.Map.get_spawn_points).
-
-However, the real power of this map API comes apparent when we introduce
-[`waypoints`](python_api.md#carla.Waypoint). We can tell the map to give us a waypoint on
-the road closest to our vehicle
-
-```py
-waypoint = map.get_waypoint(vehicle.get_location())
-```
-
-This waypoint's [`transform`](python_api.md#carla.Waypoint.transform) is located on a drivable lane,
-and it's oriented according to the road direction at that point.
-
-Waypoints have their unique identifier [`carla.Waypoint.id`](python_api.md#carla.Waypoint.id)
-based on the hash of its [`road_id`](python_api.md#carla.Waypoint.road_id),
-[`section_id`](python_api.md#carla.Waypoint.section_id),
-[`lane_id`](python_api.md#carla.Waypoint.lane_id) and [`s`](python_api.md#carla.Waypoint.s).
-They also provide more information about lanes, such as the
-[`lane_type`](python_api.md#carla.Waypoint.lane_type) of the current waypoint
-and if a [`lane_change`](python_api.md#carla.Waypoint.lane_change) is possible and in which direction.
-
-```py
-# Nearest waypoint on the center of a Driving or Sidewalk lane.
-waypoint = map.get_waypoint(vehicle.get_location(),project_to_road=True, lane_type=(carla.LaneType.Driving | carla.LaneType.Sidewalk))
-# Get the current lane type (driving or sidewalk).
-lane_type = waypoint.lane_type
-# Get available lane change.
-lane_change = waypoint.lane_change
-```
-
-Surrounding lane markings _(right / left)_ can also be accessed through the waypoint API.
-Therefore, it is possible to know all the information provided by a
-[`carla.LaneMarking`](python_api.md#carla.LaneMarking),
-like the lane marking [`type`](python_api.md#carla.LaneMarkingType) and its
-[`lane_change`](python_api.md#carla.LaneChange) availability.
-
-```py
-# Get right lane marking type
-right_lm_type = waypoint.right_lane_marking.type
-```
-
-Waypoints also have function to query the "next" waypoints; this method returns
-a list of waypoints at a certain distance that can be accessed from this
-waypoint following the traffic rules. In other words, if a vehicle is placed in
-this waypoint, give me the list of posible locations that this vehicle can drive
-to. Let's see a practical example:
-
-```py
-# Retrieve the closest waypoint.
-waypoint = map.get_waypoint(vehicle.get_location())
-
-# Disable physics, in this example we're just teleporting the vehicle.
-vehicle.set_simulate_physics(False)
-
-while True:
-    # Find next waypoint 2 meters ahead.
-    waypoint = random.choice(waypoint.next(2.0))
-    # Teleport the vehicle.
-    vehicle.set_transform(waypoint.transform)
-```
-
-The map object also provides methods for generating in bulk waypoints all over
-the map at an approximated distance between them
-
-```py
-waypoint_list = map.generate_waypoints(2.0)
-```
-
-For routing purposes, it is also possible to retrieve a topology graph of the
-roads
-
-```py
-waypoint_tuple_list = map.get_topology()
-```
-
-This method returns a list of pairs (tuples) of waypoints, for each pair, the
-first element connects with the second one. Only the minimal set of waypoints to
-define the topology are generated by this method, only a waypoint for each lane
-for each road segment in the map.
-
-Finally, to allow access to the whole road information, the map object can be
-converted to OpenDrive format, and saved to disk as such.
-
-### Recording and Replaying system
-
-CARLA includes now a recording and replaying API, that allows to record a simulation in a file and
-later replay that simulation. The file is written on server side only, and it includes which
-**actors are created or destroyed** in the simulation, the **state of the traffic lights**
-and the **position** and **orientation** of all vehicles and pedestrians.
-
-To start recording we only need to supply a file name:
-
-```py
-client.start_recorder("recording01.log")
-```
-
-To stop the recording, we need to call:
-
-```py
-client.stop_recorder()
-```
-
-At any point we can replay a simulation, specifying the filename:
-
-```py
-client.replay_file("recording01.log")
-```
-
-The replayer replicates the actor and traffic light information of the recording each frame.
-
-For more details, [Recorder and Playback system](recorder_and_playback.md)
-
-#### Pedestrians
+#### Walkers
 
 ![pedestrian types](img/pedestrian_types.png)
 
@@ -664,3 +388,30 @@ for i in range(0, len(all_id), 2):
 # destroy pedestrian (actor and controller)
 client.apply_batch([carla.command.DestroyActor(x) for x in all_id])
 ```
+
+#### Other actors
+
+Apart from vehicles and sensors, there are a few other actors in the world. The
+full list can be requested to the world with
+
+```py
+actor_list = world.get_actors()
+```
+
+The actor list object returned has functions for finding, filtering, and
+iterating actors
+
+```py
+# Find an actor by id.
+actor = actor_list.find(id)
+# Print the location of all the speed limit signs in the world.
+for speed_sign in actor_list.filter('traffic.speed_limit.*'):
+    print(speed_sign.get_location())
+```
+
+Among the actors you can find in this list are
+
+  * **Traffic lights** with a [`state`](python_api.md#carla.TrafficLight.state) property
+  to check the light's current state.
+  * **Speed limit signs** with the speed codified in their type_id.
+  * The **Spectator** actor that can be used to move the view of the simulator window.
