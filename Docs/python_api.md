@@ -1,4 +1,4 @@
-## carla.Actor<a name="carla.Actor"></a> <sub><sup>_class_</sup></sub>
+## carla.Actor<a name="carla.Actor"></a>
 CARLA defines actors as anything that plays a role in the simulation or can be moved around. That includes: pedestrians, vehicles, sensors and traffic signs (considering traffic lights as part of these). Actors are spawned in the simulation by [carla.World](#carla.World) and they need for a [carla.ActorBlueprint](#carla.ActorBlueprint) to be created. These blueprints belong into a library provided by CARLA, find more about them [here](../bp_library/).  
 
 <h3>Instance Variables</h3>
@@ -67,7 +67,7 @@ Sets the actor's velocity vector.
 
 ---
 
-## carla.ActorAttribute<a name="carla.ActorAttribute"></a> <sub><sup>_class_</sup></sub>
+## carla.ActorAttribute<a name="carla.ActorAttribute"></a>
 CARLA provides a library of blueprints for actors that can be accessed as [carla.BlueprintLibrary](#carla.BlueprintLibrary). Each of these blueprints has a series of attributes defined internally. Some of these are modifiable, others are not. A list of recommended values is provided for those that can be set.  
 
 <h3>Instance Variables</h3>
@@ -115,7 +115,7 @@ Returns true if this actor's attribute is not zero or null.
 
 ---
 
-## carla.ActorAttributeType<a name="carla.ActorAttributeType"></a> <sub><sup>_class_</sup></sub>
+## carla.ActorAttributeType<a name="carla.ActorAttributeType"></a>
 CARLA provides a library of blueprints for actors in [carla.BlueprintLibrary](#carla.BlueprintLibrary) with different attributes each. This class defines the types those at [carla.ActorAttribute](#carla.ActorAttribute) can be as a series of enum. All this information is managed internally and listed here for a better comprehension of how CARLA works.  
 
 <h3>Instance Variables</h3>
@@ -127,7 +127,7 @@ CARLA provides a library of blueprints for actors in [carla.BlueprintLibrary](#c
 
 ---
 
-## carla.ActorBlueprint<a name="carla.ActorBlueprint"></a> <sub><sup>_class_</sup></sub>
+## carla.ActorBlueprint<a name="carla.ActorBlueprint"></a>
 CARLA provides a blueprint library for actors that can be consulted through [carla.BlueprintLibrary](#carla.BlueprintLibrary). Each of these consists of an identifier for the blueprint and a series of attributes that may be modifiable or not. This class is the intermediate step between the library and the actor creation. Actors need an actor blueprint to be spawned. These store the information for said blueprint in an object with its attributes and some tags to categorize them. The user can then customize some attributes and eventually spawn the actors through [carla.World](#carla.World).  
 
 <h3>Instance Variables</h3>
@@ -171,7 +171,7 @@ If the `id` attribute is modifiable, changes its value to `value`.
 
 ---
 
-## carla.ActorList<a name="carla.ActorList"></a> <sub><sup>_class_</sup></sub>
+## carla.ActorList<a name="carla.ActorList"></a>
 A class that contains every actor present on the scene and provides access to them. The list is automatically created and updated by the server and it can be returned using [carla.World](#carla.World).  
 
 <h3>Methods</h3>
@@ -201,7 +201,7 @@ Finds an actor using its identifier and returns it or <b>None</b> if it is not p
 
 ---
 
-## carla.ActorSnapshot<a name="carla.ActorSnapshot"></a> <sub><sup>_class_</sup></sub>
+## carla.ActorSnapshot<a name="carla.ActorSnapshot"></a>
 A class that comprises all the information for an actor at a certain moment in time. These objects are contained in a [carla.WorldSnapshot](#carla.WorldSnapshot) and sent to the client once every tick.  
 
 <h3>Instance Variables</h3>
@@ -224,7 +224,7 @@ Returns the velocity vector registered for an actor in that tick.
 
 ---
 
-## carla.AttachmentType<a name="carla.AttachmentType"></a> <sub><sup>_class_</sup></sub>
+## carla.AttachmentType<a name="carla.AttachmentType"></a>
 Class that defines attachment options between an actor and its parent. When spawning actors, these can be attached to another actor so their position changes accordingly. This is specially useful for cameras and sensors. [Here](../python_cookbook/#attach-sensors-recipe) is a brief recipe in which we can see how sensors can be attached to a car when spawned. Note that the attachment type is declared as an enum within the class.  
 
 <h3>Instance Variables</h3>
@@ -235,7 +235,7 @@ An attachment that expands or retracts depending on camera situation. SpringArms
 
 ---
 
-## carla.BlueprintLibrary<a name="carla.BlueprintLibrary"></a> <sub><sup>_class_</sup></sub>
+## carla.BlueprintLibrary<a name="carla.BlueprintLibrary"></a>
 A class that contains the blueprints provided for actor spawning. Its main application is to return [carla.ActorBlueprint](#carla.ActorBlueprint) objects needed to spawn actors. Each blueprint has an identifier and attributes that may or may not be modifiable. The library is automatically created by the server and can be accessed through [carla.World](#carla.World).
   
   [Here](../bp_library/) is a reference containing every available blueprint and its specifics.  
@@ -267,7 +267,7 @@ Returns the blueprint corresponding to that identifier.
 
 ---
 
-## carla.BoundingBox<a name="carla.BoundingBox"></a> <sub><sup>_class_</sup></sub>
+## carla.BoundingBox<a name="carla.BoundingBox"></a>
 Helper class defining a box location and its dimensions that will later be used by [carla.DebugHelper](#carla.DebugHelper) or a [carla.Client](#carla.Client) to draw shapes and detect collisions. Bounding boxes normally act for object colliders. Check out this [recipe](../python_cookbook/#debug-bounding-box-recipe) where the user takes a snapshot of the world and then proceeds to draw bounding boxes for traffic lights.  
 
 <h3>Instance Variables</h3>
@@ -297,7 +297,7 @@ Parses the location and extent of the bounding box to string.
 
 ---
 
-## carla.Client<a name="carla.Client"></a> <sub><sup>_class_</sup></sub>
+## carla.Client<a name="carla.Client"></a>
 The Client connects CARLA to the server which runs the simulation. Both server and client contain a CARLA library (libcarla) with some differences that allow communication between them. Many clients can be created and each of these will connect to the RPC server inside the simulation to send commands. The simulation runs server-side. Once the connection is established, the client will only receive data retrieved from the simulation. Walkers are the exception. The client is in charge of managing pedestrians so, if you are running a simulation with multiple clients, some issues may arise. For example, if you spawn walkers through different clients, collisions may happen, as each client is only aware of the ones it is in charge of.
   
   The client also has a recording feature that saves all the information of a simulation while running it. This allows the server to replay it at will to obtain information and experiment with it. [Here](recorder_and_playback.md) is some information about how to use this recorder.  
@@ -403,8 +403,8 @@ Stops the recording in progress. If you specified a path in `filename`, the reco
 
 ---
 
-## carla.CollisionEvent<a name="carla.CollisionEvent"></a><sub><sup>([carla.SensorData](#carla.SensorData))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that defines a collision data for <b>sensor.other.collision</b>. The sensor creates one of this for every collision detected which may be many for one simulation step. Learn more about this [here](/cameras_and_sensors/#sensorothercollision).  
+## carla.CollisionEvent<a name="carla.CollisionEvent"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.SensorData](#carla.SensorData)_</b></small></div></p><p>Class that defines a collision data for <b>sensor.other.collision</b>. The sensor creates one of this for every collision detected which may be many for one simulation step. Learn more about this [here](/cameras_and_sensors/#sensorothercollision).  
 
 <h3>Instance Variables</h3>
 - <a name="carla.CollisionEvent.actor"></a>**<font color="#f8805a">actor</font>** (_[carla.Actor](#carla.Actor)_)  
@@ -416,7 +416,7 @@ Normal impulse resulting of the collision.
 
 ---
 
-## carla.Color<a name="carla.Color"></a> <sub><sup>_class_</sup></sub>
+## carla.Color<a name="carla.Color"></a>
 Class that defines a 32-bit RGBA color.  
 
 <h3>Instance Variables</h3>
@@ -447,7 +447,7 @@ Initializes a color, black by default.
 
 ---
 
-## carla.ColorConverter<a name="carla.ColorConverter"></a> <sub><sup>_class_</sup></sub>
+## carla.ColorConverter<a name="carla.ColorConverter"></a>
 Class that defines conversion patterns that can be applied to a [carla.Image](#carla.Image) in order to show information provided by [carla.Sensor](#carla.Sensor). Depth conversions cause a loss of accuracy, as sensors detect depth as <b>float</b> that is then converted to a grayscale value between 0 and 255. Take a look a this [recipe](../python_cookbook/#converted-image-recipe) to see an example of how to create and save image data for <b>sensor.camera.semantic_segmentation</b>.  
 
 <h3>Instance Variables</h3>
@@ -462,7 +462,7 @@ No changes applied to the image.
 
 ---
 
-## carla.DebugHelper<a name="carla.DebugHelper"></a> <sub><sup>_class_</sup></sub>
+## carla.DebugHelper<a name="carla.DebugHelper"></a>
 Helper class part of [carla.World](#carla.World) that defines methods for creating debug shapes. By default, shapes last one second. They can be permanent, but take into account the resources needed to do so. Check out this [recipe](../python_cookbook/#debug-bounding-box-recipe) where the user takes a snapshot of the world and then proceeds to draw bounding boxes for traffic lights.  
 
 <h3>Methods</h3>
@@ -509,7 +509,7 @@ Draws a string in a given location of the simulation which can only be seen serv
 
 ---
 
-## carla.GearPhysicsControl<a name="carla.GearPhysicsControl"></a> <sub><sup>_class_</sup></sub>
+## carla.GearPhysicsControl<a name="carla.GearPhysicsControl"></a>
 Class that provides access to vehicle transmission details by defining a gear and when to run on it. This will be later used by [carla.VehiclePhysicsControl](#carla.VehiclePhysicsControl) to help simulate physics.  
 
 <h3>Instance Variables</h3>
@@ -536,7 +536,7 @@ Quotient between current RPM and MaxRPM where the autonomous gear box should shi
 
 ---
 
-## carla.GeoLocation<a name="carla.GeoLocation"></a> <sub><sup>_class_</sup></sub>
+## carla.GeoLocation<a name="carla.GeoLocation"></a>
 Class that contains geographical coordinates simulated data. The [carla.Map](#carla.Map) can convert simulation locations by using the <b><georeference></b> tag in the OpenDRIVE file.  
 
 <h3>Instance Variables</h3>
@@ -563,8 +563,8 @@ Height regarding ground level.
 
 ---
 
-## carla.GnssMeasurement<a name="carla.GnssMeasurement"></a><sub><sup>([carla.SensorData](#carla.SensorData))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that defines the Gnss data registered by a <b>sensor.other.gnss</b>. It essentially reports its position with the position of the sensor and an OpenDRIVE geo-reference.  
+## carla.GnssMeasurement<a name="carla.GnssMeasurement"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.SensorData](#carla.SensorData)_</b></small></div></p><p>Class that defines the Gnss data registered by a <b>sensor.other.gnss</b>. It essentially reports its position with the position of the sensor and an OpenDRIVE geo-reference.  
 
 <h3>Instance Variables</h3>
 - <a name="carla.GnssMeasurement.altitude"></a>**<font color="#f8805a">altitude</font>** (_float_)  
@@ -579,8 +579,8 @@ West/East value of a point on the map.
 
 ---
 
-## carla.IMUMeasurement<a name="carla.IMUMeasurement"></a><sub><sup>([carla.SensorData](#carla.SensorData))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that defines the data registered by a <b>sensor.other.imu</b>, regarding the sensor's transformation according to the current [carla.World](#carla.World). It essentially acts as accelerometer, gyroscope and compass.  
+## carla.IMUMeasurement<a name="carla.IMUMeasurement"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.SensorData](#carla.SensorData)_</b></small></div></p><p>Class that defines the data registered by a <b>sensor.other.imu</b>, regarding the sensor's transformation according to the current [carla.World](#carla.World). It essentially acts as accelerometer, gyroscope and compass.  
 
 <h3>Instance Variables</h3>
 - <a name="carla.IMUMeasurement.accelerometer"></a>**<font color="#f8805a">accelerometer</font>** (_[carla.Vector3D](#carla.Vector3D)_)  
@@ -595,8 +595,8 @@ Angular velocity in rad/sec.
 
 ---
 
-## carla.Image<a name="carla.Image"></a><sub><sup>([carla.SensorData](#carla.SensorData))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that defines an image of 32-bit BGRA colors that will be used as initial data retrieved by camera sensors. There are different camera sensors (currently three, RGB, depth and semantic segmentation) and each of these makes different use for the images. Learn more about them [here](/cameras_and_sensors/).  
+## carla.Image<a name="carla.Image"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.SensorData](#carla.SensorData)_</b></small></div></p><p>Class that defines an image of 32-bit BGRA colors that will be used as initial data retrieved by camera sensors. There are different camera sensors (currently three, RGB, depth and semantic segmentation) and each of these makes different use for the images. Learn more about them [here](/cameras_and_sensors/).  
 
 <h3>Instance Variables</h3>
 - <a name="carla.Image.fov"></a>**<font color="#f8805a">fov</font>** (_float_)  
@@ -630,7 +630,7 @@ Saves the image to disk using a converter pattern stated as `color_converter`. T
 
 ---
 
-## carla.Junction<a name="carla.Junction"></a> <sub><sup>_class_</sup></sub>
+## carla.Junction<a name="carla.Junction"></a>
 Class that embodies the intersections on the road described in the OpenDRIVE file according to OpenDRIVE 1.4 standards.  
 
 <h3>Instance Variables</h3>
@@ -648,7 +648,7 @@ Returns a list of pairs of waypoints. Every tuple on the list contains first an 
 
 ---
 
-## carla.LaneChange<a name="carla.LaneChange"></a> <sub><sup>_class_</sup></sub>
+## carla.LaneChange<a name="carla.LaneChange"></a>
 Class that defines the permission to turn either left, right, both or none (meaning only going straight is allowed). This information is stored for every [carla.Waypoint](#carla.Waypoint) according to the OpenDRIVE file. In this [recipe](../python_cookbook/#lanes-recipe) the user creates a waypoint for a current vehicle position and learns which turns are permitted.  
 
 <h3>Instance Variables</h3>
@@ -663,8 +663,8 @@ Traffic rules allow turning right.
 
 ---
 
-## carla.LaneInvasionEvent<a name="carla.LaneInvasionEvent"></a><sub><sup>([carla.SensorData](#carla.SensorData))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that defines lanes invasion for <b>sensor.other.lane_invasion</b>. It works only client-side and is dependant on OpenDRIVE to provide reliable information. The sensor creates one of this every time there is a lane invasion, which may be more than once per simulation step. Learn more about this [here](/cameras_and_sensors/#sensorotherlane_invasion).  
+## carla.LaneInvasionEvent<a name="carla.LaneInvasionEvent"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.SensorData](#carla.SensorData)_</b></small></div></p><p>Class that defines lanes invasion for <b>sensor.other.lane_invasion</b>. It works only client-side and is dependant on OpenDRIVE to provide reliable information. The sensor creates one of this every time there is a lane invasion, which may be more than once per simulation step. Learn more about this [here](/cameras_and_sensors/#sensorotherlane_invasion).  
 
 <h3>Instance Variables</h3>
 - <a name="carla.LaneInvasionEvent.actor"></a>**<font color="#f8805a">actor</font>** (_[carla.Actor](#carla.Actor)_)  
@@ -677,7 +677,7 @@ List of lane markings that have been crossed and detected by the sensor.
 
 ---
 
-## carla.LaneMarking<a name="carla.LaneMarking"></a> <sub><sup>_class_</sup></sub>
+## carla.LaneMarking<a name="carla.LaneMarking"></a>
 Class that gathers all the information regarding a lane marking according to [OpenDRIVE 1.4 standard](http://www.opendrive.org/docs/OpenDRIVEFormatSpecRev1.4H.pdf) standard.  
 
 <h3>Instance Variables</h3>
@@ -692,7 +692,7 @@ Horizontal lane marking thickness.
 
 ---
 
-## carla.LaneMarkingColor<a name="carla.LaneMarkingColor"></a> <sub><sup>_class_</sup></sub>
+## carla.LaneMarkingColor<a name="carla.LaneMarkingColor"></a>
 Class that defines the lane marking colors according to OpenDRIVE 1.4.  
 
 <h3>Instance Variables</h3>
@@ -707,29 +707,26 @@ White by default.
 
 ---
 
-## carla.LaneMarkingType<a name="carla.LaneMarkingType"></a> <sub><sup>_class_</sup></sub>
+## carla.LaneMarkingType<a name="carla.LaneMarkingType"></a>
 Class that defines the lane marking types accepted by OpenDRIVE 1.4. Take a look at this [recipe](../python_cookbook/#lanes-recipe) where the user creates a [carla.Waypoint](#carla.Waypoint) for a vehicle location and retrieves from it the information about adjacent lane markings.  
+__Note on double types:__ Lane markings are defined under the OpenDRIVE standard that determines whereas a line will be considered "BrokenSolid" or "SolidBroken". For each road there is a center lane marking, defined from left to right regarding the lane's directions. The rest of the lane markings are defined in order from the center lane to the closest outside of the road.  
 
 <h3>Instance Variables</h3>
 - <a name="carla.LaneMarkingType.NONE"></a>**<font color="#f8805a">NONE</font>**  
 - <a name="carla.LaneMarkingType.BottsDots"></a>**<font color="#f8805a">BottsDots</font>**  
 - <a name="carla.LaneMarkingType.Broken"></a>**<font color="#f8805a">Broken</font>**  
 - <a name="carla.LaneMarkingType.BrokenBroken"></a>**<font color="#f8805a">BrokenBroken</font>**  
-From inside to outside except for center lane which is from left to right.  
 - <a name="carla.LaneMarkingType.BrokenSolid"></a>**<font color="#f8805a">BrokenSolid</font>**  
-From inside to outside except for center lane which is from left to right.  
 - <a name="carla.LaneMarkingType.Curb"></a>**<font color="#f8805a">Curb</font>**  
 - <a name="carla.LaneMarkingType.Grass"></a>**<font color="#f8805a">Grass</font>**  
 - <a name="carla.LaneMarkingType.Solid"></a>**<font color="#f8805a">Solid</font>**  
 - <a name="carla.LaneMarkingType.SolidBroken"></a>**<font color="#f8805a">SolidBroken</font>**  
-From inside to outside except for center lane which is from left to right.  
 - <a name="carla.LaneMarkingType.SolidSolid"></a>**<font color="#f8805a">SolidSolid</font>**  
-For double solid line.  
 - <a name="carla.LaneMarkingType.Other"></a>**<font color="#f8805a">Other</font>**  
 
 ---
 
-## carla.LaneType<a name="carla.LaneType"></a> <sub><sup>_class_</sup></sub>
+## carla.LaneType<a name="carla.LaneType"></a>
 Class that defines the possible lane types accepted by OpenDRIVE 1.4. This standards define the road information. For instance in this [recipe](../python_cookbook/#lanes-recipe) the user creates a [carla.Waypoint](#carla.Waypoint) for the current location of a vehicle and uses it to get the current and adjacent lane types.  
 
 <h3>Instance Variables</h3>
@@ -759,8 +756,8 @@ Every type except for NONE.
 
 ---
 
-## carla.LidarMeasurement<a name="carla.LidarMeasurement"></a><sub><sup>([carla.SensorData](#carla.SensorData))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that defines the lidar data retrieved by a <b>sensor.lidar.ray_cast</b>. This essentially simulates a rotating lidar using ray-casting. Learn more about this [here](/cameras_and_sensors/#sensorlidarray_cast).  
+## carla.LidarMeasurement<a name="carla.LidarMeasurement"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.SensorData](#carla.SensorData)_</b></small></div></p><p>Class that defines the lidar data retrieved by a <b>sensor.lidar.ray_cast</b>. This essentially simulates a rotating lidar using ray-casting. Learn more about this [here](/cameras_and_sensors/#sensorlidarray_cast).  
 
 <h3>Instance Variables</h3>
 - <a name="carla.LidarMeasurement.channels"></a>**<font color="#f8805a">channels</font>** (_int_)  
@@ -792,8 +789,8 @@ Saves the point cloud to disk as a <b>.ply</b> file describing data from 3D scan
 
 ---
 
-## carla.Location<a name="carla.Location"></a><sub><sup>([carla.Vector3D](#carla.Vector3D))</sup></sub> <sub><sup>_class_</sup></sub>
-Represents a spot in the world.  
+## carla.Location<a name="carla.Location"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.Vector3D](#carla.Vector3D)_</b></small></div></p><p>Represents a spot in the world.  
 
 <h3>Instance Variables</h3>
 - <a name="carla.Location.x"></a>**<font color="#f8805a">x</font>** (_float_)  
@@ -830,7 +827,7 @@ Returns Euclidean distance in meters from this location to another one.
 
 ---
 
-## carla.Map<a name="carla.Map"></a> <sub><sup>_class_</sup></sub>
+## carla.Map<a name="carla.Map"></a>
 Class containing the road information and waypoint managing. Data is retrieved from an OpenDRIVE file that describes the road. A query system is defined which works hand in hand with [carla.Waypoint](#carla.Waypoint) to translate geometrical information from the .xodr to natural world points. CARLA is currently working with [OpenDRIVE 1.4 standard](http://www.opendrive.org/docs/OpenDRIVEFormatSpecRev1.4H.pdf).  
 
 <h3>Instance Variables</h3>
@@ -879,8 +876,8 @@ Converts a given `location`, a point in the simulation, to a [carla.GeoLocation]
 
 ---
 
-## carla.ObstacleDetectionEvent<a name="carla.ObstacleDetectionEvent"></a><sub><sup>([carla.SensorData](#carla.SensorData))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that defines the obstacle data for <b>sensor.other.obstacle</b>. Learn more about this [here](/cameras_and_sensors/#sensorotherobstacle).  
+## carla.ObstacleDetectionEvent<a name="carla.ObstacleDetectionEvent"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.SensorData](#carla.SensorData)_</b></small></div></p><p>Class that defines the obstacle data for <b>sensor.other.obstacle</b>. Learn more about this [here](/cameras_and_sensors/#sensorotherobstacle).  
 
 <h3>Instance Variables</h3>
 - <a name="carla.ObstacleDetectionEvent.actor"></a>**<font color="#f8805a">actor</font>** (_[carla.Actor](#carla.Actor)_)  
@@ -895,7 +892,7 @@ Distance between `actor` and `other`.
 
 ---
 
-## carla.RadarDetection<a name="carla.RadarDetection"></a> <sub><sup>_class_</sup></sub>
+## carla.RadarDetection<a name="carla.RadarDetection"></a>
 Data contained inside a [carla.RadarMeasurement](#carla.RadarMeasurement). Each of these represents one of the points in the cloud that a <b>sensor.other.radar</b> registers and contains the distance, angle and velocity in relation to the radar.  
 
 <h3>Instance Variables</h3>
@@ -913,8 +910,8 @@ The velocity of the detected object towards the sensor in m/s.
 
 ---
 
-## carla.RadarMeasurement<a name="carla.RadarMeasurement"></a><sub><sup>([carla.SensorData](#carla.SensorData))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that defines and gathers the measures registered by a <b>sensor.other.radar</b>, representing a wall of points in front of the sensor with a distance, angle and velocity in relation to it. The data consists of a [carla.RadarDetection](#carla.RadarDetection) array.  
+## carla.RadarMeasurement<a name="carla.RadarMeasurement"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.SensorData](#carla.SensorData)_</b></small></div></p><p>Class that defines and gathers the measures registered by a <b>sensor.other.radar</b>, representing a wall of points in front of the sensor with a distance, angle and velocity in relation to it. The data consists of a [carla.RadarDetection](#carla.RadarDetection) array.  
 
 <h3>Instance Variables</h3>
 - <a name="carla.RadarMeasurement.raw_data"></a>**<font color="#f8805a">raw_data</font>** (_bytes_)  
@@ -936,7 +933,7 @@ Retrieves the number of entries generated, same as **<font color="#7fb800">\__st
 
 ---
 
-## carla.Rotation<a name="carla.Rotation"></a> <sub><sup>_class_</sup></sub>
+## carla.Rotation<a name="carla.Rotation"></a>
 Class that represents a 3D rotation and therefore, an orientation in space.
 
 ![UE4_Rotation](https://d26ilriwvtzlb.cloudfront.net/8/83/BRMC_9.jpg)   _Unreal Engine's standard (from [UE4 docs](https://wiki.unrealengine.com/Blueprint_Rotating_Movement_Component))_.  
@@ -973,8 +970,8 @@ Parses the axis' orientations to string.
 
 ---
 
-## carla.Sensor<a name="carla.Sensor"></a><sub><sup>([carla.Actor](#carla.Actor))</sup></sub> <sub><sup>_class_</sup></sub>
-Sensors compound a specific family of actors quite diverse and unique. They are normally spawned as attachment/sons of a vehicle (take a look at [carla.World](#carla.World) to learn about actor spawning). Sensors are thoroughly designed to retrieve different types of data that they are listening to. The data they receive is shaped as different subclasses inherited from [carla.SensorData](#carla.SensorData) (depending on the sensor).             
+## carla.Sensor<a name="carla.Sensor"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.Actor](#carla.Actor)_</b></small></div></p><p>Sensors compound a specific family of actors quite diverse and unique. They are normally spawned as attachment/sons of a vehicle (take a look at [carla.World](#carla.World) to learn about actor spawning). Sensors are thoroughly designed to retrieve different types of data that they are listening to. The data they receive is shaped as different subclasses inherited from [carla.SensorData](#carla.SensorData) (depending on the sensor).             
      
   Most sensors can be divided in two groups: those receiving data on every tick (cameras, point clouds and some specific sensors) and those who only receive under certain circumstances (trigger detectors). CARLA provides a specific set of sensors and their blueprint can be found in [carla.BlueprintLibrary](#carla.BlueprintLibrary). All the information on their preferences and settlement can be found [here](/cameras_and_sensors/), but the list of those available in CARLA so far goes as follow:        
   <b>Receive data on every tick:</b>       
@@ -1005,7 +1002,7 @@ Commands the sensor to stop listening for data.
 
 ---
 
-## carla.SensorData<a name="carla.SensorData"></a> <sub><sup>_class_</sup></sub>
+## carla.SensorData<a name="carla.SensorData"></a>
 Base class for all the objects containing data generated by a [carla.Sensor](#carla.Sensor). This objects should be the argument of the function said sensor is listening to, in order to work with them. Each of these sensors needs for a specific type of sensor data. The relation between available sensors and their corresponding data goes like:        
   - Cameras (RGB, depth and semantic segmentation): [carla.Image](#carla.Image).        
   - Collision detector: [carla.CollisionEvent](#carla.CollisionEvent).        
@@ -1026,7 +1023,7 @@ Sensor's transform when the data was generated.
 
 ---
 
-## carla.Timestamp<a name="carla.Timestamp"></a> <sub><sup>_class_</sup></sub>
+## carla.Timestamp<a name="carla.Timestamp"></a>
 Class that contains time information for simulated data. This information is automatically retrieved as part of the [carla.WorldSnapshot](#carla.WorldSnapshot) the client gets on every frame, but might also be used in many other situations such as a [carla.Sensor](#carla.Sensor) retrieveing data.  
 
 <h3>Instance Variables</h3>
@@ -1056,8 +1053,8 @@ Time register of the frame at which this measurement was taken given by the OS i
 
 ---
 
-## carla.TrafficLight<a name="carla.TrafficLight"></a><sub><sup>([carla.TrafficSign](#carla.TrafficSign))</sup></sub> <sub><sup>_class_</sup></sub>
-A traffic light actor, considered a specific type of traffic sign. As traffic lights will mostly appear at junctions, they belong to a group which contains the different traffic lights in it. Inside the group, traffic lights are differenciated by their pole index.
+## carla.TrafficLight<a name="carla.TrafficLight"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.TrafficSign](#carla.TrafficSign)_</b></small></div></p><p>A traffic light actor, considered a specific type of traffic sign. As traffic lights will mostly appear at junctions, they belong to a group which contains the different traffic lights in it. Inside the group, traffic lights are differenciated by their pole index.
      
   Within a group the state of traffic lights is changed in a cyclic pattern: one index is chosen and it spends a few seconds in green, yellow and eventually red. The rest of the traffic lights remain frozen in red this whole time, meaning that there is a gap in the last seconds of the cycle where all the traffic lights are red. However, the state of a traffic light can be changed manually. Take a look at this [recipe](../python_cookbook/#traffic-lights-recipe) to learn how to do so.  
 
@@ -1115,7 +1112,7 @@ Sets a given time (in seconds) for the yellow light to be active.
 
 ---
 
-## carla.TrafficLightState<a name="carla.TrafficLightState"></a> <sub><sup>_class_</sup></sub>
+## carla.TrafficLightState<a name="carla.TrafficLightState"></a>
 All possible states for traffic lights. These can either change at a specific time step or be changed manually. Take a look at this [recipe](../python_cookbook/#traffic-lights-recipe) to see an example.  
 
 <h3>Instance Variables</h3>
@@ -1127,8 +1124,8 @@ All possible states for traffic lights. These can either change at a specific ti
 
 ---
 
-## carla.TrafficSign<a name="carla.TrafficSign"></a><sub><sup>([carla.Actor](#carla.Actor))</sup></sub> <sub><sup>_class_</sup></sub>
-Traffic signs appearing in the simulation except for traffic lights. These have their own class inherited from this in [carla.TrafficLight](#carla.TrafficLight). Right now, speed signs, stops and yields are mainly the ones implemented, but many others are borne in mind.  
+## carla.TrafficSign<a name="carla.TrafficSign"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.Actor](#carla.Actor)_</b></small></div></p><p>Traffic signs appearing in the simulation except for traffic lights. These have their own class inherited from this in [carla.TrafficLight](#carla.TrafficLight). Right now, speed signs, stops and yields are mainly the ones implemented, but many others are borne in mind.  
 
 <h3>Instance Variables</h3>
 - <a name="carla.TrafficSign.trigger_volume"></a>**<font color="#f8805a">trigger_volume</font>**  
@@ -1136,7 +1133,7 @@ A [carla.BoundingBox](#carla.BoundingBox) situated near a traffic sign where the
 
 ---
 
-## carla.Transform<a name="carla.Transform"></a> <sub><sup>_class_</sup></sub>
+## carla.Transform<a name="carla.Transform"></a>
 Class that defines a transformation, a combination of location and rotation, without scaling.  
 
 <h3>Instance Variables</h3>
@@ -1173,7 +1170,7 @@ Translates a 3D point from global to local coordinates using the current transfo
 
 ---
 
-## carla.Vector2D<a name="carla.Vector2D"></a> <sub><sup>_class_</sup></sub>
+## carla.Vector2D<a name="carla.Vector2D"></a>
 Helper class to perform 2D operations.  
 
 <h3>Instance Variables</h3>
@@ -1219,7 +1216,7 @@ Returns the axis values for the vector parsed as string.
 
 ---
 
-## carla.Vector3D<a name="carla.Vector3D"></a> <sub><sup>_class_</sup></sub>
+## carla.Vector3D<a name="carla.Vector3D"></a>
 Helper class to perform 3D operations.  
 
 <h3>Instance Variables</h3>
@@ -1268,8 +1265,8 @@ Returns the axis values for the vector parsed as string.
 
 ---
 
-## carla.Vehicle<a name="carla.Vehicle"></a><sub><sup>([carla.Actor](#carla.Actor))</sup></sub> <sub><sup>_class_</sup></sub>
-One of the most important group of actors in CARLA. These include any type of vehicle from cars to trucks, motorbikes, vans, bycicles and also official vehicles such as police cars. A wide set of these actors is provided in [carla.BlueprintLibrary](#carla.BlueprintLibrary) to facilitate differente requirements. Vehicles can be either manually controlled or set to an autopilot mode that will be conducted client-side by the <b>traffic manager</b>.  
+## carla.Vehicle<a name="carla.Vehicle"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.Actor](#carla.Actor)_</b></small></div></p><p>One of the most important group of actors in CARLA. These include any type of vehicle from cars to trucks, motorbikes, vans, bycicles and also official vehicles such as police cars. A wide set of these actors is provided in [carla.BlueprintLibrary](#carla.BlueprintLibrary) to facilitate differente requirements. Vehicles can be either manually controlled or set to an autopilot mode that will be conducted client-side by the <b>traffic manager</b>.  
 
 <h3>Instance Variables</h3>
 - <a name="carla.Vehicle.bounding_box"></a>**<font color="#f8805a">bounding_box</font>** (_[carla.BoundingBox](#carla.BoundingBox)_)  
@@ -1312,7 +1309,7 @@ Turns on/off this vehicle's server-side autopilot. When autopilot mode is on, th
 
 ---
 
-## carla.VehicleControl<a name="carla.VehicleControl"></a> <sub><sup>_class_</sup></sub>
+## carla.VehicleControl<a name="carla.VehicleControl"></a>
 Manages the basic movement of a vehicle using typical driving controls.  
 
 <h3>Instance Variables</h3>
@@ -1351,7 +1348,7 @@ States which gear is the vehicle running on.
 
 ---
 
-## carla.VehiclePhysicsControl<a name="carla.VehiclePhysicsControl"></a> <sub><sup>_class_</sup></sub>
+## carla.VehiclePhysicsControl<a name="carla.VehiclePhysicsControl"></a>
 Summarizes the parameters that will be used to simulate a [carla.Vehicle](#carla.Vehicle) as a physical object. The specific settings for the wheels though are stipulated using [carla.WheelPhysicsControl](#carla.WheelPhysicsControl).  
 
 <h3>Instance Variables</h3>
@@ -1417,8 +1414,8 @@ VehiclePhysicsControl constructor.
 
 ---
 
-## carla.Walker<a name="carla.Walker"></a><sub><sup>([carla.Actor](#carla.Actor))</sup></sub> <sub><sup>_class_</sup></sub>
-This class inherits from the [carla.Actor](#carla.Actor) and defines pedestrians in the simulation. Walkers are a special type of actor that can be controlled either by an AI ([carla.WalkerAIController](#carla.WalkerAIController)) or manually via script, using a series of [carla.WalkerControl](#carla.WalkerControl) to move these and their skeletons.  
+## carla.Walker<a name="carla.Walker"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.Actor](#carla.Actor)_</b></small></div></p><p>This class inherits from the [carla.Actor](#carla.Actor) and defines pedestrians in the simulation. Walkers are a special type of actor that can be controlled either by an AI ([carla.WalkerAIController](#carla.WalkerAIController)) or manually via script, using a series of [carla.WalkerControl](#carla.WalkerControl) to move these and their skeletons.  
 
 <h3>Instance Variables</h3>
 - <a name="carla.Walker.bounding_box"></a>**<font color="#f8805a">bounding_box</font>** (_[carla.BoundingBox](#carla.BoundingBox)_)  
@@ -1441,8 +1438,8 @@ The client returns the control applied to this walker during last tick. The meth
 
 ---
 
-## carla.WalkerAIController<a name="carla.WalkerAIController"></a><sub><sup>([carla.Actor](#carla.Actor))</sup></sub> <sub><sup>_class_</sup></sub>
-Class that conducts AI control for a walker. The controllers are defined as actors, but they are quite different from the rest. They need to be attached to a parent actor during their creation, which is the walker they will be controlling (take a look at [carla.World](#carla.World) if you are yet to learn on how to spawn actors). They also need for a special blueprint (already defined in [carla.BlueprintLibrary](#carla.BlueprintLibrary) as "controller.ai.walker"). This is an empty blueprint, as the AI controller will be invisible in the simulation but will follow its parent around to dictate every step of the way.  
+## carla.WalkerAIController<a name="carla.WalkerAIController"></a>
+<div style="padding-left:30px;margin-top:-20px"><small><b>Inherited from _[carla.Actor](#carla.Actor)_</b></small></div></p><p>Class that conducts AI control for a walker. The controllers are defined as actors, but they are quite different from the rest. They need to be attached to a parent actor during their creation, which is the walker they will be controlling (take a look at [carla.World](#carla.World) if you are yet to learn on how to spawn actors). They also need for a special blueprint (already defined in [carla.BlueprintLibrary](#carla.BlueprintLibrary) as "controller.ai.walker"). This is an empty blueprint, as the AI controller will be invisible in the simulation but will follow its parent around to dictate every step of the way.  
 
 <h3>Methods</h3>
 - <a name="carla.WalkerAIController.start"></a>**<font color="#7fb800">start</font>**(<font color="#00a6ed">**self**</font>)  
@@ -1461,7 +1458,7 @@ Sets a speed for the walker in meters per second.
 
 ---
 
-## carla.WalkerBoneControl<a name="carla.WalkerBoneControl"></a> <sub><sup>_class_</sup></sub>
+## carla.WalkerBoneControl<a name="carla.WalkerBoneControl"></a>
 This class grants bone specific manipulation for walker. The skeletons of walkers have been unified for clarity and the transform applied to each bone are always relative to its parent. Take a look [here](walker_bone_control.md) to learn more on how to create a walker and define its movement.  
 
 <h3>Instance Variables</h3>
@@ -1477,7 +1474,7 @@ Intializes an object containing moves to be applied on tick. These are listed wi
 
 ---
 
-## carla.WalkerControl<a name="carla.WalkerControl"></a> <sub><sup>_class_</sup></sub>
+## carla.WalkerControl<a name="carla.WalkerControl"></a>
 This class defines specific directions that can be commanded to a [carla.Walker](#carla.Walker) to control it via script. The walker's animations will blend automatically with the parameters defined in this class when applied, though specific skeleton moves can be obtained through class.WalkerBoneControl.
   
   AI control can be settled for walkers, but the control used to do so is [carla.WalkerAIController](#carla.WalkerAIController).  
@@ -1508,7 +1505,7 @@ Compares every variable with `other` and returns <b>True</b> if any of these dif
 
 ---
 
-## carla.Waypoint<a name="carla.Waypoint"></a> <sub><sup>_class_</sup></sub>
+## carla.Waypoint<a name="carla.Waypoint"></a>
 Waypoints in CARLA are described as 3D directed points. They store a certain [carla.Transform](#carla.Transform) which locates the waypoint in a road and orientates it according to the lane. They also store the road information belonging to said point regarding its lane and lane markings. All of this information is retrieved as provided by the OpenDRIVE file.  
 
 <h3>Instance Variables</h3>
@@ -1548,7 +1545,7 @@ Will return <b>None</b> if the lane does not exist.
     - **Return:** _[carla.Waypoint](#carla.Waypoint)_  
 - <a name="carla.Waypoint.next"></a>**<font color="#7fb800">next</font>**(<font color="#00a6ed">**self**</font>, <font color="#00a6ed">**distance**</font>)  
 Returns a list of waypoints at a certain approximate `distance` from the current one. It takes into account the road and its possible deviations without performing any lane change and returns one waypoint per option.   
-The list may be empty if the road ends before the specified distance, for instance, a lane ending with the only option of incorporating to another road.  
+The list may be empty if the lane is not connected to any other at the specified distance.  
     - **Parameters:**
         - `distance` (_float_) – The approximate distance where to get the next waypoints.  
     - **Return:** _list([carla.Waypoint](#carla.Waypoint))_  
@@ -1559,7 +1556,7 @@ Returns a list of waypoints from this to the end of the lane separated by a cert
     - **Return:** _list([carla.Waypoint](#carla.Waypoint))_  
 - <a name="carla.Waypoint.previous"></a>**<font color="#7fb800">previous</font>**(<font color="#00a6ed">**self**</font>, <font color="#00a6ed">**distance**</font>)  
 This method does not return the waypoint previously visited by an actor, but a list of waypoints at an approximate `distance` but in the opposite direction of the lane. Similarly to **<font color="#7fb800">next()</font>**, it takes into account the road and its possible deviations without performing any lane change and returns one waypoint per option.   
-The list may be empty if the road ends before the specified distance, for instance, a lane ending with the only option of incorporating to another road.  
+The list may be empty if the lane is not connected to any other at the specified distance.  
     - **Parameters:**
         - `distance` (_float_) – The approximate distance where to get the previous waypoints.  
     - **Return:** _list([carla.Waypoint](#carla.Waypoint))_  
@@ -1572,7 +1569,7 @@ Returns a list of waypoints from this to the start of the lane separated by a ce
 
 ---
 
-## carla.WeatherParameters<a name="carla.WeatherParameters"></a> <sub><sup>_class_</sup></sub>
+## carla.WeatherParameters<a name="carla.WeatherParameters"></a>
 This class defines objects containing lightning and weather specifications that can later be applied in [carla.World](#carla.World). So far, these conditions only intervene with [sensor.camera.rgb](/bp_library/). They neither affect the actor's physics nor other sensors.        
   Each of these parameters acts indepently from the rest. Increasing the rainfall will not automatically create puddles nor change the road's humidity. That makes for a better customization but means that realistic conditions need to be scripted. However an example of dynamic weather conditions working realistically can be found [here](https://github.com/carla-simulator/carla/blob/master/PythonAPI/examples/dynamic_weather.py).  
 
@@ -1614,7 +1611,7 @@ Parses a summary of the parameters defined to string and shows it up on screen.
 
 ---
 
-## carla.WheelPhysicsControl<a name="carla.WheelPhysicsControl"></a> <sub><sup>_class_</sup></sub>
+## carla.WheelPhysicsControl<a name="carla.WheelPhysicsControl"></a>
 Class that defines specific physical parameters for wheel objects that will be part of a [carla.VehiclePhysicsControl](#carla.VehiclePhysicsControl) to simulate vehicle it as a material object.  
 
 <h3>Instance Variables</h3>
@@ -1653,7 +1650,7 @@ World position of the wheel. This is a read-only parameter.
 
 ---
 
-## carla.World<a name="carla.World"></a> <sub><sup>_class_</sup></sub>
+## carla.World<a name="carla.World"></a>
 World objects are created by the client to have a place for the simulation to happen. The world contains the map we can see, meaning the asset, not the navigation map. Navigation maps are part of the [carla.Map](#carla.Map) class. It also manages the weather and actors present in it. There can only be one world per simulation, but it can be changed anytime.  
 
 <h3>Instance Variables</h3>
@@ -1742,7 +1739,7 @@ The client tells the server to block calling thread until a **<font color="#7fb8
 
 ---
 
-## carla.WorldSettings<a name="carla.WorldSettings"></a> <sub><sup>_class_</sup></sub>
+## carla.WorldSettings<a name="carla.WorldSettings"></a>
 The simulation has some advanced configuration options that are contained in this class and can be managed using [carla.World](#carla.World) and its methods. These allow the user to choose between client-server synchrony/asynchrony, activation of "no rendering mode" and either if the simulation should run with a fixed or variable time-step. Check [this](../configuring_the_simulation/) out if you want to learn about it.  
 
 <h3>Instance Variables</h3>
@@ -1776,7 +1773,7 @@ Parses the established settings to a string and shows them in command line.
 
 ---
 
-## carla.WorldSnapshot<a name="carla.WorldSnapshot"></a> <sub><sup>_class_</sup></sub>
+## carla.WorldSnapshot<a name="carla.WorldSnapshot"></a>
 This snapshot comprises all the information for every actor on scene at a certain moment of time. It creates and gives acces to a data structure containing a series of [carla.ActorSnapshot](#carla.ActorSnapshot). The client recieves a new snapshot on every tick that cannot be stored.  
 
 <h3>Instance Variables</h3>
@@ -1816,7 +1813,7 @@ Given a certain actor ID, checks if there is a snapshot corresponding it and so,
 
 ---
 
-## command.ApplyAngularVelocity<a name="command.ApplyAngularVelocity"></a> <sub><sup>_class_</sup></sub>
+## command.ApplyAngularVelocity<a name="command.ApplyAngularVelocity"></a>
 Command adaptation of **<font color="#7fb800">set_angular_velocity()</font>** in [carla.Actor](#carla.Actor). Sets an actor's angular velocity.  
 
 <h3>Instance Variables</h3>
@@ -1833,7 +1830,7 @@ The 3D angular velocity that will be applied to the actor.
 
 ---
 
-## command.ApplyImpulse<a name="command.ApplyImpulse"></a> <sub><sup>_class_</sup></sub>
+## command.ApplyImpulse<a name="command.ApplyImpulse"></a>
 Command adaptation of **<font color="#7fb800">add_impulse()</font>** in [carla.Actor](#carla.Actor). Adds impulse to an actor.  
 
 <h3>Instance Variables</h3>
@@ -1850,7 +1847,7 @@ Impulse applied to the actor.
 
 ---
 
-## command.ApplyTransform<a name="command.ApplyTransform"></a> <sub><sup>_class_</sup></sub>
+## command.ApplyTransform<a name="command.ApplyTransform"></a>
 Command adaptation of **<font color="#7fb800">set_transform()</font>** in [carla.Actor](#carla.Actor). Sets a new transform to an actor.  
 
 <h3>Instance Variables</h3>
@@ -1867,7 +1864,7 @@ Transformation to be applied.
 
 ---
 
-## command.ApplyVehicleControl<a name="command.ApplyVehicleControl"></a> <sub><sup>_class_</sup></sub>
+## command.ApplyVehicleControl<a name="command.ApplyVehicleControl"></a>
 Command adaptation of **<font color="#7fb800">apply_control()</font>** in [carla.Vehicle](#carla.Vehicle). Applies a certain control to a vehicle.  
 
 <h3>Instance Variables</h3>
@@ -1884,7 +1881,7 @@ Vehicle control to be applied.
 
 ---
 
-## command.ApplyVelocity<a name="command.ApplyVelocity"></a> <sub><sup>_class_</sup></sub>
+## command.ApplyVelocity<a name="command.ApplyVelocity"></a>
 Command adaptation of **<font color="#7fb800">set_velocity()</font>** in [carla.Actor](#carla.Actor). Sets an actor's velocity.  
 
 <h3>Instance Variables</h3>
@@ -1901,7 +1898,7 @@ The 3D velocity applied to the actor.
 
 ---
 
-## command.ApplyWalkerControl<a name="command.ApplyWalkerControl"></a> <sub><sup>_class_</sup></sub>
+## command.ApplyWalkerControl<a name="command.ApplyWalkerControl"></a>
 Command adaptation of **<font color="#7fb800">apply_control()</font>** in [carla.Walker](#carla.Walker). Applies a control to a walker.  
 
 <h3>Instance Variables</h3>
@@ -1918,7 +1915,7 @@ Walker control to be applied.
 
 ---
 
-## command.ApplyWalkerState<a name="command.ApplyWalkerState"></a> <sub><sup>_class_</sup></sub>
+## command.ApplyWalkerState<a name="command.ApplyWalkerState"></a>
 Apply a state to the walker actor. Specially useful to initialize an actor them with a specific location, orientation and speed.  
 
 <h3>Instance Variables</h3>
@@ -1938,7 +1935,7 @@ Speed to be applied.
 
 ---
 
-## command.DestroyActor<a name="command.DestroyActor"></a> <sub><sup>_class_</sup></sub>
+## command.DestroyActor<a name="command.DestroyActor"></a>
 Command adaptation of **<font color="#7fb800">destroy()</font>** in [carla.Actor](#carla.Actor) that tells the simulator to destroy this actor. It has no effect if the actor was already destroyed. When executed with **<font color="#7fb800">apply_batch_synch()</font>** in [carla.Client](#carla.Client) there will be a <b>command.Response</b> that will return a boolean stating whether the actor was successfully destroyed.  
 
 <h3>Instance Variables</h3>
@@ -1952,7 +1949,7 @@ Actor affected by the command.
 
 ---
 
-## command.Response<a name="command.Response"></a> <sub><sup>_class_</sup></sub>
+## command.Response<a name="command.Response"></a>
 States the result of executing a command as either the ID of the actor to whom the command was applied to (when succeeded) or an error string (when failed).  actor ID, depending on whether or not the command succeeded. The method **<font color="#7fb800">apply_batch_sync()</font>** in [carla.Client](#carla.Client) returns a list of these to summarize the execution of a batch.  
 
 <h3>Instance Variables</h3>
@@ -1968,7 +1965,7 @@ Returns <b>True</b> if the command represents a successful execution and <b>Fals
 
 ---
 
-## command.SetAutopilot<a name="command.SetAutopilot"></a> <sub><sup>_class_</sup></sub>
+## command.SetAutopilot<a name="command.SetAutopilot"></a>
 Command adaptation of **<font color="#7fb800">set_autopilot()</font>** in [carla.Vehicle](#carla.Vehicle). Turns on/off the vehicle's server-side autopilot.  
 
 <h3>Instance Variables</h3>
@@ -1985,7 +1982,7 @@ If autopilot should be activated or not.
 
 ---
 
-## command.SetSimulatePhysics<a name="command.SetSimulatePhysics"></a> <sub><sup>_class_</sup></sub>
+## command.SetSimulatePhysics<a name="command.SetSimulatePhysics"></a>
 Command adaptation of **<font color="#7fb800">set_simulate_physics()</font>** in [carla.Actor](#carla.Actor). Determines whether an actor will be affected by physics or not.  
 
 <h3>Instance Variables</h3>
@@ -2002,7 +1999,7 @@ If physics should be activated or not.
 
 ---
 
-## command.SpawnActor<a name="command.SpawnActor"></a> <sub><sup>_class_</sup></sub>
+## command.SpawnActor<a name="command.SpawnActor"></a>
 Command adaptation of **<font color="#7fb800">spawn_actor()</font>** in [carla.World](#carla.World). Spawns an actor into the world based on the blueprint provided and the transform. If a parent is provided, the actor is attached to it.  
 
 <h3>Instance Variables</h3>
