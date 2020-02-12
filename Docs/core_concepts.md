@@ -19,7 +19,7 @@ In order to learn everything about the different classes and methods in the API,
 
 <h4>1st. World and client</h4>
 
-The client is the module the user runs to ask for information or changes in the simulation. It communicates with the server via terminal. A client runs with an IP and a specific port. There can be many clients running at the same time, though multiclient managing needs a full comprehension on CARLA in order to make things work properly.  
+The client is the module the user runs to ask for information or changes in the simulation. It communicates with the server via terminal. A client runs with an IP and a specific port. There can be many clients running at the same time, although multiclient managing needs a full comprehension on CARLA in order to make things work properly.  
 
 The world is an object representing the simulation, an abstract layer containing the main methods to manage it: spawn actors, change the weather, get the current state of the world, etc. There is only one world per simulation, but it will be destroyed and substituted for a new one when the map is changed. 
 
@@ -32,7 +32,7 @@ In CARLA, an actor is anything that plays a role in the simulation. That include
 * The spectator.
 * Traffic signs and traffic lights.
 
-A blueprint is needed in order to spawn an actor. __Blueprints__ are a set of already-made actor layouts: models with animations and different attributes. Some of these can be changed by the user, others don't. There is a library provided by CARLA containing all the available ones and the information regarding them. Visit the [Blueprint library](bp_library.md) to learn more about this. 
+A blueprint is needed in order to spawn an actor. __Blueprints__ are a set of already-made actor layouts: models with animations and different attributes. Some of these can be changed by the user, others don't. There is a library provided by CARLA containing all the available blueprints and the information regarding them. Visit the [Blueprint library](bp_library.md) to learn more about this. 
 
 <h4>3rd. Maps and traffic</h4>
 
@@ -42,7 +42,7 @@ Traffic signs and traffic lights have bounding boxes placed on the road that mak
 
 <h4>4th. Sensors and data</h4>
 
-Sensors are one of the most important actors in CARLA and their use can be quite complex. A sensor is attached to a parent vehicle and follows it around, gathering information of the surroundings for the sake of learning. Sensors, as any other actor, have blueprints available in the [Blueprint library](bp_library.md) that correspond to the types available. Currently these are:  
+Sensors are one of the most important actors in CARLA and their use can be quite complex. A sensor is attached to a parent vehicle and follows it around, gathering information of the surroundings for the sake of learning. Sensors, as any other actor, have blueprints available in the [Blueprint library](bp_library.md) that correspond to the types available. Currently, these are:  
 
 * Cameras (RGB, depth and semantic segmentation).  
 * Collision detector.  
